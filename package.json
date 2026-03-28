@@ -1,1 +1,39 @@
-{"name":"@relayfile/relaycast-n8n-bridge","version":"0.1.0","private":true}
+{
+  "name": "relaycast-n8n-bridge",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Bridge relaycast channel events into n8n webhooks.",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "bin": {
+    "relaycast-n8n-bridge": "./dist/cli.js"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "Dockerfile",
+    "bridge.example.json"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "npm run build && node --test",
+    "start": "node dist/cli.js start",
+    "health": "node dist/cli.js health"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "@relaycast/sdk": "^1.1.0",
+    "minimatch": "^10.1.1",
+    "ws": "^8.18.3",
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "@agent-relay/sdk": "^3.2.22",
+    "@types/node": "^25.5.0",
+    "@types/ws": "^8.18.1",
+    "typescript": "^6.0.2"
+  }
+}
