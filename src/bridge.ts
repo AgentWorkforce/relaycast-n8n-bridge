@@ -70,6 +70,7 @@ export interface BridgeMetrics {
   batchesProcessed: number;
   messagesForwarded: number;
   webhookErrors: number;
+  wsErrors: number;
   reconnects: number;
   permanentlyDisconnected: number;
   deadLetters: number;
@@ -142,6 +143,7 @@ export class RelaycastN8nBridge {
     batchesProcessed: 0,
     messagesForwarded: 0,
     webhookErrors: 0,
+    wsErrors: 0,
     reconnects: 0,
     permanentlyDisconnected: 0,
     deadLetters: 0,
@@ -289,7 +291,7 @@ export class RelaycastN8nBridge {
     this.ws.on('*', (event) => {
       const wsEvent = event as WsClientEvent;
       if (wsEvent.type === 'error') {
-        this.metrics.webhookErrors += 1;
+        this.metrics.wsErrors += 1;
       }
     });
   }
@@ -408,13 +410,14 @@ export class RelaycastN8nBridge {
           signal: controller.signal,
         });
 
-        clearTimeout(timer);
-
         if (response.ok) {
+          clearTimeout(timer);
           return;
         }
 
+        // Read error body with the same timeout still active
         const responseBody = await response.text();
+        clearTimeout(timer);
         lastError = new Error(
           `Webhook returned ${response.status}${responseBody ? `: ${responseBody}` : ''}`,
         );
