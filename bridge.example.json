@@ -1,0 +1,29 @@
+{
+  "bridgeId": "relaycast-prod",
+  "relaycastUrl": "https://api.relaycast.dev",
+  "relaycastToken": "replace-me",
+  "healthHost": "0.0.0.0",
+  "healthPort": 8787,
+  "batchWindowMs": 100,
+  "retryAttempts": 3,
+  "retryBaseDelayMs": 500,
+  "deadLetterPath": ".data/relaycast-n8n-bridge.dead-letter.jsonl",
+  "routes": [
+    {
+      "id": "reviews",
+      "channelPattern": "review-*",
+      "n8nWebhookUrl": "https://n8n.example/webhook/review-findings",
+      "filter": {
+        "senders": ["reviewer-bot", "security-bot"]
+      }
+    },
+    {
+      "id": "alerts",
+      "channelPattern": "alerts",
+      "n8nWebhookUrl": "https://n8n.example/webhook/alerts",
+      "filter": {
+        "contentMatch": "/critical|high/i"
+      }
+    }
+  ]
+}
